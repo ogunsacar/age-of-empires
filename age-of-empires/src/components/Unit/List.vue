@@ -1,25 +1,23 @@
 <template>
   <div>
     <div class="unit-list">
-      <UnitItem v-for="unit in units" :key="unit.id" :unit="unit" />
+      <UnitItem v-for="unit in filteredUnits" :key="unit.id" :unit="unit" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
+import { useUnitsStore } from '../../stores/units.ts'
 import UnitItem from '../Unit/Item.vue'
 
-const units = ref(null)
+const unitsStore = useUnitsStore()
 
 onMounted(() => {
-  fetch('/data/age-of-empires-units.json')
-    .then(response => response.json())
-    .then(data => {
-      units.value = data.units
-    })
-    .catch(error => console.error(error))
+  unitsStore.fetchUnits()
 })
+
+const filteredUnits = computed(() => unitsStore.filteredUnits)
 </script>
 
 <style lang="scss" scoped>

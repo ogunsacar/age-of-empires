@@ -3,10 +3,18 @@
     <div class="unit-card_id">{{ unit.id }}</div>
     <div class="unit-card_name">{{ unit.name }}</div>
     <div class="unit-card_age">{{ unit.age }}</div>
-    <div>
-      <span v-if="unit.cost?.food">{{ unit.cost.food }} 🥩 </span>
-      <span v-if="unit.cost?.wood">{{ unit.cost.wood }} 🪵 </span>
-      <span v-if="unit.cost?.gold">{{ unit.cost.gold }} 🌕</span>
+    <div style="min-width: 115px; text-align: center" v-if="!unit.cost">-</div>
+    <div style="min-width: 115px; text-align: center" v-else>
+      <span v-if="unit.cost?.food"
+        >{{ unit.cost.food }}
+        <span> 🥩 </span>
+      </span>
+      <span v-if="unit.cost?.wood"
+        >{{ unit.cost.wood }} <span> 🪵 </span>
+      </span>
+      <span v-if="unit.cost?.gold"
+        >{{ unit.cost.gold }} <span> 🌕 </span>
+      </span>
     </div>
   </div>
 </template>
@@ -17,7 +25,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const props = defineProps({
+defineProps({
   unit: {
     type: Object,
     required: true,
@@ -35,7 +43,7 @@ function showDetail(id) {
   border-radius: 0.5rem;
   padding: 0.5rem 0.5rem;
   display: grid;
-  grid-template-columns: 0.2fr 1fr 1fr 0.6fr;
+  grid-template-columns: 0.2fr 1fr 0.8fr 0.9fr;
   column-gap: 0.1rem;
 
   &:hover {

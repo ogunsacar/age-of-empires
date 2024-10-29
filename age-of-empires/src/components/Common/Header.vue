@@ -21,13 +21,30 @@ import { RouterLink } from 'vue-router'
   margin-bottom: 20px;
   padding: 20px;
   font-size: 32px;
-  color: #1d1d1d;
+  color: #784b10;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+
+  &-title {
+    font-size: 2rem;
+
+    @media (max-width: 600px) {
+      font-size: 2rem;
+    }
+  }
 
   &-links {
     display: flex;
     justify-content: center;
     align-items: center;
     column-gap: 10px;
+
+    @media (max-width: 600px) {
+      margin-top: 10px;
+      font-size: 1rem;
+    }
   }
 }
 </style>

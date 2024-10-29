@@ -1,24 +1,19 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main>
-    <img
-      src="/2k-age-of-wp.png"
-      alt="age-of-empires"
-      width="80%"
-      height="40%"
-    />
-  </main>
+  <div>
+    <img src="/2k-age-of-wp.png" alt="age-of-empires" />
+  </div>
 </template>
 
 <style lang="scss" scoped>
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 img {
+  height: 85vh;
+  width: 100%;
   border-radius: 20px;
+
+  @media (max-width: 600px) {
+    height: 100%;
+  }
 }
 </style>
