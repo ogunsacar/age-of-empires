@@ -16,6 +16,5 @@ import CommonHeader from '../components/Common/Header.vue'
   width: 100%;
   background-color: #fff;
   color: #1d1d1d;
-  overflow: scroll;
 }
 </style>
