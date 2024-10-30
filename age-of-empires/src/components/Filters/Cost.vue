@@ -1,86 +1,34 @@
 <template>
   <div>
     <form>
-      <div class="range-input">
+      <div
+        class="range-input"
+        v-for="resource in resources"
+        :key="resource.name"
+      >
         <div>
-          <div>Wood 🪵</div>
-
+          <div>{{ resource.label }}</div>
           <div class="checkbox-wrapper">
             <input
               class="tgl tgl-light"
-              id="wood"
+              :id="resource.name"
               type="checkbox"
-              name="wood"
-              v-model="wood.isChecked"
+              :name="resource.name"
+              v-model="resourceData[resource.name].isChecked"
             />
-            <label class="tgl-btn" for="wood" />
+            <label class="tgl-btn" :for="resource.name" />
           </div>
         </div>
 
         <VueSimpleRangeSlider
-          v-if="wood.isChecked"
+          v-if="resourceData[resource.name].isChecked"
           style="width: 100%"
-          :min="0"
-          :max="225"
-          active-bar-color="#cc976e"
-          v-model="wood.range"
+          :min="unitsStore.initialRanges[resource.name][0]"
+          :max="unitsStore.initialRanges[resource.name][1]"
+          :active-bar-color="resource.color"
+          v-model="resourceData[resource.name].range"
         >
-          <template #prefix>🪵</template>
-        </VueSimpleRangeSlider>
-      </div>
-
-      <div class="range-input">
-        <div>
-          <div>Food 🥩</div>
-
-          <div class="checkbox-wrapper">
-            <input
-              class="tgl tgl-light"
-              id="food"
-              type="checkbox"
-              name="food"
-              v-model="food.isChecked"
-            />
-            <label class="tgl-btn" for="food" />
-          </div>
-        </div>
-
-        <VueSimpleRangeSlider
-          v-if="food.isChecked"
-          style="width: 100%"
-          :min="0"
-          :max="225"
-          active-bar-color="#a11c10"
-          v-model="food.range"
-        >
-          <template #prefix>🥩</template>
-        </VueSimpleRangeSlider>
-      </div>
-
-      <div class="range-input">
-        <div>
-          <div>Gold 🟡</div>
-          <div class="checkbox-wrapper">
-            <input
-              class="tgl tgl-light"
-              id="gold"
-              type="checkbox"
-              name="gold"
-              v-model="gold.isChecked"
-            />
-            <label class="tgl-btn" for="gold" />
-          </div>
-        </div>
-
-        <VueSimpleRangeSlider
-          v-if="gold.isChecked"
-          style="width: 100%"
-          :min="0"
-          :max="225"
-          active-bar-color="#f0da32"
-          v-model="gold.range"
-        >
-          <template #prefix>🌕</template>
+          <template #prefix> {{ resource.icon }} </template>
         </VueSimpleRangeSlider>
       </div>
     </form>
@@ -90,23 +38,66 @@
 <script setup lang="ts">
 import VueSimpleRangeSlider from 'vue-simple-range-slider'
 import 'vue-simple-range-slider/css'
-import { reactive, watch, ref } from 'vue'
+import { reactive, watch } from 'vue'
+import { useUnitsStore } from '@/stores/units.ts'
 
-const debounceTimeout = ref(null)
+const unitsStore = useUnitsStore()
 
-const wood = reactive({ range: [0, 225], isChecked: false })
-const food = reactive({ range: [0, 225], isChecked: false })
-const gold = reactive({ range: [0, 225], isChecked: false })
+const resources = [
+  {
+    name: 'wood',
+    label: 'Wood 🪵',
+    icon: '🪵',
+    color: '#cc976e',
+  },
+  {
+    name: 'food',
+    label: 'Food 🥩',
+    icon: '🥩',
+    color: '#a11c10',
+  },
+  {
+    name: 'gold',
+    label: 'Gold 🟡',
+    icon: '🌕',
+    color: '#f0da32',
+  },
+] as const
+
+type ResourceName = (typeof resources)[number]['name']
+
+const resourceData = reactive<
+  Record<ResourceName, { range: [number, number]; isChecked: boolean }>
+>({})
+
+resources.forEach(resource => {
+  resourceData[resource.name] = {
+    range: [...unitsStore.filterRanges[resource.name]],
+    isChecked: unitsStore.isChecked[resource.name],
+  }
+})
+
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 
 watch(
-  () => [wood.range, food.range, gold.range],
+  () =>
+    resources.map(resource => [
+      resourceData[resource.name].range,
+      resourceData[resource.name].isChecked,
+    ]),
   () => {
-    if (debounceTimeout.value) clearTimeout(debounceTimeout.value)
+    if (debounceTimeout) clearTimeout(debounceTimeout)
 
-    debounceTimeout.value = setTimeout(() => {
-      console.log('Updated wood range:', wood.range)
-      console.log('Updated food range:', food.range)
-      console.log('Updated gold range:', gold.range)
+    debounceTimeout = setTimeout(() => {
+      resources.forEach(resource => {
+        unitsStore.setResourceRange(
+          resource.name,
+          resourceData[resource.name].isChecked
+            ? resourceData[resource.name].range
+            : unitsStore.filterRanges[resource.name],
+          resourceData[resource.name].isChecked,
+        )
+      })
     }, 500)
   },
   { deep: true },

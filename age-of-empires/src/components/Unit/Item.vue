@@ -32,7 +32,7 @@ defineProps({
   },
 })
 
-function showDetail(id) {
+function showDetail(id: number) {
   router.push({ name: 'unit_detail', params: { id } })
 }
 </script>

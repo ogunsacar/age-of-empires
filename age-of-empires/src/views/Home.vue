@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <div>
     <img src="/2k-age-of-wp.png" alt="age-of-empires" />

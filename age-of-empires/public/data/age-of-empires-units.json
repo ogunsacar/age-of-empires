@@ -453,7 +453,7 @@
       "expansion": "Age of Kings",
       "age": "Imperial",
       "cost": {
-        "wood": 200,
+        "wood": 245,
         "gold": 200
       },
       "build_time": 50,
@@ -2004,7 +2004,7 @@
       "expansion": "Age of Kings",
       "age": "Castle",
       "cost": {
-        "food": 200,
+        "food": 275,
         "gold": 75
       },
       "build_time": 31,

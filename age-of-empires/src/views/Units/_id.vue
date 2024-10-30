@@ -104,23 +104,29 @@
       </div>
     </div>
   </div>
+
+  <div class="detail-cta">
+    <RouterLink to="/units">Go back</RouterLink>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUnitsStore } from '../../stores/units.ts'
+import type { IUnit } from '@/types/unit.types.ts'
+import { RouterLink } from 'vue-router'
 
 const unitsStore = useUnitsStore()
 
 onMounted(() => {
   const { id } = route.params
 
-  unitsStore.fetchUnitById(id)
+  unitsStore.fetchUnitById(+id)
 })
 
 const route = useRoute()
-const unit = computed(() => unitsStore.unit)
+const unit = computed<IUnit>(() => unitsStore.unit)
 </script>
 
 <style lang="scss" scoped>
@@ -185,90 +191,17 @@ const unit = computed(() => unitsStore.unit)
       }
     }
   }
-}
+  &-cta {
+    margin-top: 2rem;
+    padding: 0.5rem 1rem;
+    border: #1d1d1d 1px solid;
+    border-radius: 8px;
+    width: 120px;
+    text-align: center;
 
-[tooltip] {
-  position: relative;
-}
-
-[tooltip]::before,
-[tooltip]::after {
-  text-transform: none;
-  font-size: 0.9em;
-  line-height: 1;
-  user-select: none;
-  pointer-events: none;
-  position: absolute;
-  display: none;
-  opacity: 0;
-}
-[tooltip]::before {
-  content: '';
-  border: 5px solid transparent;
-  z-index: 1001;
-}
-[tooltip]::after {
-  content: attr(tooltip);
-  text-align: center;
-  min-width: 3em;
-  max-width: 21em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 1ch 1.5ch;
-  border-radius: 0.3ch;
-  box-shadow: 0 1em 2em -0.5em rgba(0, 0, 0, 0.35);
-  background: #333;
-  color: #fff;
-  z-index: 1000;
-}
-
-[tooltip]:hover::before,
-[tooltip]:hover::after {
-  display: block;
-}
-
-[tooltip='']::before,
-[tooltip='']::after {
-  display: none !important;
-}
-
-[tooltip]:not([flow])::before,
-[tooltip][flow^='up']::before {
-  bottom: 100%;
-  border-bottom-width: 0;
-  border-top-color: #333;
-}
-[tooltip]:not([flow])::after,
-[tooltip][flow^='up']::after {
-  bottom: calc(100% + 5px);
-}
-[tooltip]:not([flow])::before,
-[tooltip]:not([flow])::after,
-[tooltip][flow^='up']::before,
-[tooltip][flow^='up']::after {
-  left: 50%;
-  transform: translate(-50%, -0.5em);
-}
-
-@keyframes tooltips-vert {
-  to {
-    opacity: 0.9;
-    transform: translate(-50%, 0);
+    & > a {
+      color: #808080;
+    }
   }
-}
-
-@keyframes tooltips-horz {
-  to {
-    opacity: 0.9;
-    transform: translate(0, -50%);
-  }
-}
-
-[tooltip]:not([flow]):hover::before,
-[tooltip]:not([flow]):hover::after,
-[tooltip][flow^='up']:hover::before,
-[tooltip][flow^='up']:hover::after {
-  animation: tooltips-vert 300ms ease-out forwards;
 }
 </style>

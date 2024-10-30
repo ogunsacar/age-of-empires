@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <div class="unit-list">
-      <UnitItem v-for="unit in filteredUnits" :key="unit.id" :unit="unit" />
-    </div>
+  <div class="unit-list">
+    <UnitItem v-for="unit in filteredUnits" :key="unit.id" :unit="unit" />
   </div>
 </template>
 
